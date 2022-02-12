@@ -76,8 +76,6 @@ public class SocketIoConfig {
      *
      * @param socketServer
      * @return com.corundumstudio.socketio.annotation.SpringAnnotationScanner
-     * @author wliduo[i@dolyw.com]
-     * @date 2019/7/31 18:21
      */
     @Bean
     public SpringAnnotationScanner springAnnotationScanner(SocketIOServer socketServer) {
