@@ -6,6 +6,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 //@Configuration
@@ -16,29 +17,29 @@ public class SocketIoConfig {
      * logger
      */
     private static final Logger logger = LoggerFactory.getLogger(SocketIoConfig.class);
-    @Value("${socketio.port}")
+    @Value("${socketIo.port}")
     private Integer port;
 
-    @Value("${socketio.workCount}")
-    private int workCount;
+    @Value("${socketIo.workCount}")
+    private Integer workCount;
 
-    @Value("${socketio.allowCustomRequests}")
-    private boolean allowCustomRequests;
+    @Value("${socketIo.allowCustomRequests}")
+    private Boolean allowCustomRequests;
 
-    @Value("${socketio.upgradeTimeout}")
-    private int upgradeTimeout;
+    @Value("${socketIo.upgradeTimeout}")
+    private Integer upgradeTimeout;
 
-    @Value("${socketio.pingTimeout}")
-    private int pingTimeout;
+    @Value("${socketIo.pingTimeout}")
+    private Integer pingTimeout;
 
-    @Value("${socketio.pingInterval}")
-    private int pingInterval;
+    @Value("${socketIo.pingInterval}")
+    private Integer pingInterval;
 
-    @Value("${socketio.maxFramePayloadLength}")
-    private int maxFramePayloadLength;
+    @Value("${socketIo.maxFramePayloadLength}")
+    private Integer maxFramePayloadLength;
 
-    @Value("${socketio.maxHttpContentLength}")
-    private int maxHttpContentLength;
+    @Value("${socketIo.maxHttpContentLength}")
+    private Integer maxHttpContentLength;
     /**
      * SocketIOServer配置
      *
@@ -48,6 +49,7 @@ public class SocketIoConfig {
     @Bean("socketIOServer")
     public SocketIOServer socketIOServer() {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname("localhost");
         // 配置端口
         config.setPort(port);
         // 开启Socket端口复用

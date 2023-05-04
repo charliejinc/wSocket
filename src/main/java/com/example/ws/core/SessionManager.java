@@ -16,15 +16,11 @@ public class SessionManager {
     // userId -> [userId, sessionId] 同一用户多端登录
     private Map<Integer, Set<String>> userSessions = new ConcurrentHashMap<>();
 
-    public void addSession(SocketIOClient client) {
+    public void addSession( SocketIOClient client) {
         // 客户端连接的时候假如到缓存里面，以便后续推送消息，key是用户sessionId，value 是用户连接
         String sessionId = getSessionId(client);
         if (sessionId != null) {
-            Set<SocketIOClient> connections = sessionConnections.get(sessionId);
-            if (connections == null) {
-                connections = new HashSet<>();
-                sessionConnections.put(sessionId, connections);
-            }
+            Set<SocketIOClient> connections = sessionConnections.computeIfAbsent(sessionId, k -> new HashSet<>());
             connections.add(client);
             userLogin(sessionId);
         }
@@ -80,23 +76,20 @@ public class SessionManager {
         int userId = 0;
         if (sessionId != null && sessionId.trim().length() > 0) {
             try {
-                userId = Integer.valueOf(sessionId.split("|")[1]);
+                userId = Integer.parseInt(sessionId.split("\\|")[1]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (userId > 0) {
-            Set<String> sessions = userSessions.get(userId);
-            if (sessions == null) {
-                sessions = new HashSet<>();
-                userSessions.put(userId, sessions);
-            }
+            Set<String> sessions = userSessions.computeIfAbsent(userId, k -> new HashSet<>());
             sessions.add(sessionId);
         }
     }
-    private String getSessionId(SocketIOClient client) {
-        Map<String, String> cookie = getCookies(client);
-        String sid = client.getSessionId().toString() + "|" + (cookie.get("userId") != null ? cookie.get("userId") : "0");
+    private String getSessionId ( SocketIOClient client) {
+        String userId=client.get("userId");
+       // Map<String, String> cookie = getCookies(client);
+        String sid = client.getSessionId().toString() + "|" + userId;
         return sid;
     }
 

@@ -1,5 +1,11 @@
 server:
     port: 8080
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+            - org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration
 # SocketIO配置
 socketIo:
     # SocketIO端口
@@ -18,3 +24,4 @@ socketIo:
     maxHttpContentLength: 1048576
     # 设置最大每帧处理数据的长度，防止他人利用大数据来攻击服务器
     maxFramePayloadLength: 1048576
+    namespaces: /chat

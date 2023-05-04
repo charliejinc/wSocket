@@ -28,7 +28,7 @@ public class WebSocketService implements ApplicationRunner {
      */
     @Autowired(required = false)
     private SocketIOServer socketIOServer;
-    @Value("${socketio.namespaces}")
+    @Value("${socketIo.namespaces}")
     private String[] namespaces;
     @Autowired
     private SpringContextHolder springContextHolder;
@@ -42,11 +42,13 @@ public class WebSocketService implements ApplicationRunner {
         Optional.ofNullable(namespaces).ifPresent(nss ->
                 Arrays.stream(nss).forEach(ns -> {
                     //获取命名空间
-                    SocketIONamespace socketIONamespace = socketIOServer.getNamespace(ns);
+
+                    SocketIONamespace socketIONamespace =  socketIOServer.addNamespace(ns);;
                     //获取期待的类名
                     String className = ns.substring(1) + "MessageEventHandler";
                     Object bean = springContextHolder.getBean(className);
-                    Optional.ofNullable(bean).ifPresent(socketIONamespace::addListeners);
+                    socketIONamespace.addListeners(bean);
+
                 }));
         socketIOServer.start();
         logger.info("---------- NettySocket通知服务启动成功 ----------");
