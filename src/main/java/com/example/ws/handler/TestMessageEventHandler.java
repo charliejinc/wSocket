@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component("chatMessageEventHandler")
-public class ChatMessageEventHandler extends BaseEventHandler{
+@Component("testMessageEventHandler")
+public class TestMessageEventHandler extends BaseEventHandler{
 
     @OnEvent(value = "message")
     public void onEvent(SocketIOClient client, AckRequest request, String data) {

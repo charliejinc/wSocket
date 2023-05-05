@@ -3,6 +3,7 @@ package com.example.ws.core;
 import com.corundumstudio.socketio.HandshakeData;
 import com.corundumstudio.socketio.SocketIOClient;
 import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,27 +13,26 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class SessionManager {
     // sessionId => [sessionId, conn]，同一个session，有多条连接，同一个浏览器，打开多个
-    private Map<String, Set<SocketIOClient>> sessionConnections = new ConcurrentHashMap<>();
+    private final Map<String, Set<SocketIOClient>> sessionConnections = new ConcurrentHashMap<>();
     // userId -> [userId, sessionId] 同一用户多端登录
-    private Map<Integer, Set<String>> userSessions = new ConcurrentHashMap<>();
+    private final Map<Integer, Set<String>> userSessions = new ConcurrentHashMap<>();
 
-    public void addSession( SocketIOClient client) {
+    public void addSession(SocketIOClient client) {
         // 客户端连接的时候假如到缓存里面，以便后续推送消息，key是用户sessionId，value 是用户连接
         String sessionId = getSessionId(client);
-        if (sessionId != null) {
-            Set<SocketIOClient> connections = sessionConnections.computeIfAbsent(sessionId, k -> new HashSet<>());
-            connections.add(client);
-            userLogin(sessionId);
-        }
+        Set<SocketIOClient> connections = sessionConnections.computeIfAbsent(sessionId, k -> new HashSet<>());
+        connections.add(client);
+        userLogin(sessionId);
+
     }
+
     public void removeSession(SocketIOClient client) {
         String sessionId = getSessionId(client);
-        if (sessionId != null) {
-            Set<SocketIOClient> connections = sessionConnections.get(sessionId);
-            if (connections != null) {
-                connections.remove(client);
-            }
+        Set<SocketIOClient> connections = sessionConnections.get(sessionId);
+        if (connections != null) {
+            connections.remove(client);
         }
+
     }
 
 
@@ -86,13 +86,13 @@ public class SessionManager {
             sessions.add(sessionId);
         }
     }
-    private String getSessionId ( SocketIOClient client) {
-        String userId=client.get("userId");
-       // Map<String, String> cookie = getCookies(client);
-        String sid = client.getSessionId().toString() + "|" + userId;
-        return sid;
-    }
 
+    private String getSessionId(SocketIOClient client) {
+        String userId = client.get("userId");
+
+        // Map<String, String> cookie = getCookies(client);
+        return client.getSessionId().toString() + "|" + userId + "|" + client.getNamespace().getName();
+    }
 
 
 }

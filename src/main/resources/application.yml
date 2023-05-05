@@ -24,4 +24,4 @@ socketIo:
     maxHttpContentLength: 1048576
     # 设置最大每帧处理数据的长度，防止他人利用大数据来攻击服务器
     maxFramePayloadLength: 1048576
-    namespaces: /chat
+    namespaces: /chat,/test
