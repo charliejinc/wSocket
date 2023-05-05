@@ -58,6 +58,7 @@ public class SocketIoConfig {
         config.setSocketConfig(socketConfig);
         // 连接数大小
         config.setWorkerThreads(workCount);
+        config.setWebsocketCompression(false);
         // 允许客户请求
         config.setAllowCustomRequests(allowCustomRequests);
         // 协议升级超时时间(毫秒)，默认10秒，HTTP握手升级为ws协议超时时间

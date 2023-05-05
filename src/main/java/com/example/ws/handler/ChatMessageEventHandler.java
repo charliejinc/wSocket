@@ -22,6 +22,8 @@ public class ChatMessageEventHandler extends BaseEventHandler{
     public void onConnect(SocketIOClient client) {
         super.onConnect(client);
     }
+
+
     @OnDisconnect
     @Override
     public void onDisConnect(SocketIOClient client) {
