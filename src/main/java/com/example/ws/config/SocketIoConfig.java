@@ -2,9 +2,12 @@ package com.example.ws.config;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.SpringAnnotationScanner;
+import com.corundumstudio.socketio.store.RedissonStoreFactory;
 import lombok.Data;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +43,10 @@ public class SocketIoConfig {
 
     @Value("${socketIo.maxHttpContentLength}")
     private Integer maxHttpContentLength;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
     /**
      * SocketIOServer配置
      *
@@ -52,6 +59,7 @@ public class SocketIoConfig {
         config.setHostname("localhost");
         // 配置端口
         config.setPort(port);
+        RedissonStoreFactory redisStoreFactory = new RedissonStoreFactory(redissonClient);
         // 开启Socket端口复用
         com.corundumstudio.socketio.SocketConfig socketConfig = new com.corundumstudio.socketio.SocketConfig();
         socketConfig.setReuseAddress(true);
@@ -71,6 +79,7 @@ public class SocketIoConfig {
         config.setMaxHttpContentLength(maxHttpContentLength);
         // 设置最大每帧处理数据的长度，防止他人利用大数据来攻击服务器
         config.setMaxFramePayloadLength(maxFramePayloadLength);
+        config.setStoreFactory(redisStoreFactory);
         return new SocketIOServer(config);
     }
 
