@@ -6,7 +6,10 @@ spring:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
             - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
             - org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration
-# SocketIO配置
+    redis:
+        host: redis-server
+        password: sunredis2020
+        port: 6379
 socketIo:
     # SocketIO端口
     port: 9090
